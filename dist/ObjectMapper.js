@@ -269,14 +269,14 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
         }
         // tslint:disable-next-line:triple-equals
         if (exports.AccessType.WRITE_ONLY != metadata.access) {
+            // tslint:disable-next-line:triple-equals
+            var jsonKeyName = metadata.name != undefined ? metadata.name : key;
             /**
              * Check requried property
              */
-            if (metadata.required && json[metadata.name] === undefined) {
+            if (metadata.required && json[jsonKeyName] === undefined) {
                 throw new JsonConversionError("JSON structure does have have required property '" + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
             }
-            // tslint:disable-next-line:triple-equals
-            var jsonKeyName = metadata.name != undefined ? metadata.name : key;
             // tslint:disable-next-line:triple-equals
             if (json[jsonKeyName] != undefined) {
                 /**
