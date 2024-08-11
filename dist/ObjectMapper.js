@@ -248,7 +248,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     else {
         objectInstance = instance;
     }
-    var objectKeys = Object.keys(objectInstance);
+    var objectKeys = Array.from(objectInstance.attributeMap.keys());
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function (item) {
         if (objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
             // Property does not have setter
