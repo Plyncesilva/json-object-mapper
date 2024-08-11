@@ -33,10 +33,19 @@ export const DeserializeDateType = (instance: Object, instanceKey: string, type:
     }
 };
 
+function getArrayType(arrayType: string): any {
+    const match = arrayType.match(/^Array<(.*)>$/);
+    if (match && match[1]) {
+        return match[1].trim();
+    } else {
+        throw new Error("Invalid Array type format");
+    }
+}
+
 /**
  * Deserializes a JS array type from json.
  */
-export let DeserializeArrayType = (instance: Object, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
+export let DeserializeArrayType = (instance: any, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
     const jsonObject = (jsonKey !== undefined) ? (json[jsonKey] || []) : json;
     const jsonArraySize = jsonObject.length;
     const conversionFunctionsList = [];
@@ -45,9 +54,11 @@ export let DeserializeArrayType = (instance: Object, instanceKey: string, type: 
     if (jsonArraySize > 0) {
         for (let i = 0; i < jsonArraySize; i++) {
             if (jsonObject[i]) {
-                const typeName = getTypeNameFromInstance(type);
+                let typeName = typeof jsonObject[i];
                 if (!isSimpleType(typeName)) {
-                    const typeInstance = new type();
+                    let arrayTypeName = getArrayType(instance.attributeMap.get(instanceKey));
+                    let arrayType = instance.arrayTypeMap.get(arrayTypeName);
+                    const typeInstance = new arrayType();
                     conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
                     arrayInstance.push(typeInstance);
                 } else {
@@ -105,7 +116,7 @@ export const DeserializeComplexType = (instance: Object, instanceKey: string, ty
              * Check requried property
              */
             if (metadata.required && json[jsonKeyName] === undefined) {
-                throw new JsonConversionError(`JSON structure does have have required property '${metadata.name}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, json);
+                throw new JsonConversionError(`JSON structure does have have required property '${key}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, json);
             }
             // tslint:disable-next-line:triple-equals
             if (json[jsonKeyName] != undefined) {

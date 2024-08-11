@@ -205,6 +205,15 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
         throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
     }
 };
+function getArrayType(arrayType) {
+    var match = arrayType.match(/^Array<(.*)>$/);
+    if (match && match[1]) {
+        return match[1].trim();
+    }
+    else {
+        throw new Error("Invalid Array type format");
+    }
+}
 /**
  * Deserializes a JS array type from json.
  */
@@ -217,9 +226,11 @@ var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey)
     if (jsonArraySize > 0) {
         for (var i = 0; i < jsonArraySize; i++) {
             if (jsonObject[i]) {
-                var typeName = getTypeNameFromInstance(type);
+                var typeName = typeof jsonObject[i];
                 if (!isSimpleType(typeName)) {
-                    var typeInstance = new type();
+                    var arrayTypeName = getArrayType(instance.attributeMap.get(instanceKey));
+                    var arrayType = instance.arrayTypeMap.get(arrayTypeName);
+                    var typeInstance = new arrayType();
                     conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
                     arrayInstance.push(typeInstance);
                 }
@@ -275,7 +286,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
              * Check requried property
              */
             if (metadata.required && json[jsonKeyName] === undefined) {
-                throw new JsonConversionError("JSON structure does have have required property '" + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
+                throw new JsonConversionError("JSON structure does have have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
             }
             // tslint:disable-next-line:triple-equals
             if (json[jsonKeyName] != undefined) {
