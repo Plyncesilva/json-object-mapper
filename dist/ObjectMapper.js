@@ -290,6 +290,10 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                     /**
                     * If we do not have any type defined, then we can't do much here but to hope for the best.
                     */
+                    var targetType = objectInstance.attributeMap.get(key);
+                    var jsonType = typeof json[jsonKeyName];
+                    if (targetType != jsonType)
+                        throw new JsonConverstionError("Attempting to assign a '" + jsonType + "' to a '" + targetType + "'", json);
                     objectInstance[key] = json[jsonKeyName];
                 }
                 else {

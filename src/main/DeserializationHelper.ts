@@ -118,6 +118,10 @@ export const DeserializeComplexType = (instance: Object, instanceKey: string, ty
                     /**
                     * If we do not have any type defined, then we can't do much here but to hope for the best.
                     */
+                   let targetType: string = objectInstance.attributeMap.get(key);
+                   let jsonType: string = typeof json[jsonKeyName];
+                   if (targetType != jsonType)
+                        throw new JsonConverstionError(`Attempting to assign a '${jsonType}' to a '${targetType}'`, json);
                     objectInstance[key] = json[jsonKeyName];
                 } else {
                     if (!isArrayType(objectInstance, key)) {
