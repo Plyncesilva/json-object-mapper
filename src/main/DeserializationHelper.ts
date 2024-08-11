@@ -1,4 +1,4 @@
-import { AccessType, Deserializer, JsonConverstionError , JsonPropertyDecoratorMetadata} from './DecoratorMetadata';
+import { AccessType, Deserializer, JsonConversionError , JsonPropertyDecoratorMetadata} from './DecoratorMetadata';
 import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
 declare var Reflect;
@@ -16,7 +16,7 @@ export const DeserializeSimpleType = (instance: Object, instanceKey: string, typ
         return [];
     } catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConverstionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`, json);
+        throw new JsonConversionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`, json);
     }
 };
 
@@ -29,7 +29,7 @@ export const DeserializeDateType = (instance: Object, instanceKey: string, type:
         return [];
     } catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConverstionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`, json);
+        throw new JsonConversionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`, json);
     }
 };
 
@@ -102,7 +102,7 @@ export const DeserializeComplexType = (instance: Object, instanceKey: string, ty
              * Check requried property
              */
             if (metadata.required && json[metadata.name] === undefined) {
-                throw new JsonConverstionError(`JSON structure does have have required property '${metadata.name}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, json);
+                throw new JsonConversionError(`JSON structure does have have required property '${metadata.name}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, json);
             }
             // tslint:disable-next-line:triple-equals
             const jsonKeyName = metadata.name != undefined ? metadata.name : key;
@@ -121,7 +121,7 @@ export const DeserializeComplexType = (instance: Object, instanceKey: string, ty
                    let targetType: string = objectInstance.attributeMap.get(key);
                    let jsonType: string = typeof json[jsonKeyName];
                    if (targetType != jsonType)
-                        throw new JsonConverstionError(`Attempting to assign a '${jsonType}' to a '${targetType}'`, json);
+                        throw new JsonConversionError(`Attempting to assign a '${jsonType}' to a '${targetType}'`, json);
                     objectInstance[key] = json[jsonKeyName];
                 } else {
                     if (!isArrayType(objectInstance, key)) {

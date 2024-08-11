@@ -67,7 +67,7 @@ export const JsonIgnore = (): Function => {
 /**
  * Json convertion error type.
  */
-export class JsonConverstionError {
+export class JsonConversionError {
     private json: string;
     private message: string;
     private stack: string;

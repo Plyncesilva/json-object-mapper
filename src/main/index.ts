@@ -100,5 +100,5 @@ export namespace ObjectMapper {
         return struct.values[0];
     };
 }
-export { JsonProperty, JsonConverstionError, AccessType, CacheKey, JsonIgnore } from './DecoratorMetadata';
+export { JsonProperty, JsonConversionError, AccessType, CacheKey, JsonIgnore } from './DecoratorMetadata';
 export { DateSerializer } from './SerializationHelper';

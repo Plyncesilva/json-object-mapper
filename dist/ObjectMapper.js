@@ -167,13 +167,13 @@ var JsonIgnore = function () {
 /**
  * Json convertion error type.
  */
-var JsonConverstionError = (function () {
-    function JsonConverstionError(message, json) {
+var JsonConversionError = (function () {
+    function JsonConversionError(message, json) {
         this.json = json;
         this.message = message;
         this.stack = (new Error()).stack;
     }
-    return JsonConverstionError;
+    return JsonConversionError;
 }());
 
 var SimpleTypeCoverter = function (value, type) {
@@ -189,7 +189,7 @@ var DeserializeSimpleType = function (instance, instanceKey, type, json, jsonKey
     }
     catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConverstionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
+        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
     }
 };
 /**
@@ -202,7 +202,7 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
     }
     catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConverstionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
+        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
     }
 };
 /**
@@ -273,7 +273,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
              * Check requried property
              */
             if (metadata.required && json[metadata.name] === undefined) {
-                throw new JsonConverstionError("JSON structure does have have required property '" + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
+                throw new JsonConversionError("JSON structure does have have required property '" + metadata.name + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
             }
             // tslint:disable-next-line:triple-equals
             var jsonKeyName = metadata.name != undefined ? metadata.name : key;
@@ -293,7 +293,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                     var targetType = objectInstance.attributeMap.get(key);
                     var jsonType = typeof json[jsonKeyName];
                     if (targetType != jsonType)
-                        throw new JsonConverstionError("Attempting to assign a '" + jsonType + "' to a '" + targetType + "'", json);
+                        throw new JsonConversionError("Attempting to assign a '" + jsonType + "' to a '" + targetType + "'", json);
                     objectInstance[key] = json[jsonKeyName];
                 }
                 else {
@@ -650,7 +650,7 @@ var uniqueId = function () {
 })(exports.ObjectMapper || (exports.ObjectMapper = {}));
 
 exports.JsonProperty = JsonProperty;
-exports.JsonConverstionError = JsonConverstionError;
+exports.JsonConversionError = JsonConversionError;
 exports.CacheKey = CacheKey;
 exports.JsonIgnore = JsonIgnore;
 exports.DateSerializer = DateSerializer;

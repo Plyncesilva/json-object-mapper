@@ -46,7 +46,7 @@ export declare function JsonIgnore(): any;
 /**
  * Json convertion error type.
  */
-export declare function JsonConverstionError(message: string, json: any): Error;
+export declare function JsonConversionError(message: string, json: any): Error;
 
 export declare namespace ObjectMapper {
 
