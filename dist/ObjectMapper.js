@@ -2,6 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function __extends(d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
 function __decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -167,29 +173,45 @@ var JsonIgnore = function () {
 /**
  * Json convertion error type.
  */
-var JsonConversionError = (function () {
-    function JsonConversionError(message, json) {
-        this.json = json;
-        this.message = message;
-        this.stack = (new Error()).stack;
+var JsonConversionError = (function (_super) {
+    __extends(JsonConversionError, _super);
+    function JsonConversionError(message) {
+        _super.call(this, message);
+        this.name = "JsonConversionError";
     }
     return JsonConversionError;
-}());
+}(Error));
 
 var SimpleTypeCoverter = function (value, type) {
-    return type === Constants.DATE_TYPE ? new Date(value) : value;
+    if (areCompatibleSimpleTypes(type, value)) {
+        return value;
+    }
+    else if (type === Date) {
+        if ((typeof value) != 'number') {
+            throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.");
+        }
+        return new Date(value);
+    }
+    throw new JsonConversionError("Value " + value + " is not compatible with type " + type.name);
 };
+function areCompatibleSimpleTypes(type, element) {
+    var elementType = typeof element;
+    return element instanceof type ||
+        Constants.STRING_TYPE_LOWERCASE == elementType && type == String ||
+        Constants.NUMBER_TYPE_LOWERCASE == elementType && type == Number ||
+        Constants.BOOLEAN_TYPE_LOWERCASE == elementType && type == Boolean ||
+        Constants.DATE_TYPE_LOWERCASE == elementType && type == Date;
+}
 /**
  * Deserializes a standard js object type(string, number and boolean) from json.
  */
 var DeserializeSimpleType = function (instance, instanceKey, type, json, jsonKey) {
-    try {
+    if (areCompatibleSimpleTypes(type, json[jsonKey])) {
         instance[instanceKey] = json[jsonKey];
         return [];
     }
-    catch (e) {
-        // tslint:disable-next-line:no-string-literal
-        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
+    else {
+        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey);
     }
 };
 /**
@@ -202,18 +224,9 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
     }
     catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, json);
+        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey);
     }
 };
-function getArrayType(arrayType) {
-    var match = arrayType.match(/^Array<(.*)>$/);
-    if (match && match[1]) {
-        return match[1].trim();
-    }
-    else {
-        throw new Error("Invalid Array type format");
-    }
-}
 /**
  * Deserializes a JS array type from json.
  */
@@ -225,17 +238,15 @@ var DeserializeArrayType = function (instance, instanceKey, type, json, jsonKey)
     instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
         for (var i = 0; i < jsonArraySize; i++) {
-            if (jsonObject[i]) {
-                var typeName = typeof jsonObject[i];
+            if (jsonObject[i] !== undefined) {
+                var typeName = type.name;
                 if (!isSimpleType(typeName)) {
-                    var arrayTypeName = getArrayType(instance.attributeMap.get(instanceKey));
-                    var arrayType = instance.arrayTypeMap.get(arrayTypeName);
-                    var typeInstance = new arrayType();
-                    conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, json: jsonObject[i] });
+                    var typeInstance = new type();
+                    conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, instance: typeInstance, type: type, json: jsonObject[i] });
                     arrayInstance.push(typeInstance);
                 }
                 else {
-                    arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](jsonObject[i], typeName));
+                    arrayInstance.push(conversionFunctions[Constants.FROM_ARRAY](jsonObject[i], type));
                 }
             }
         }
@@ -259,7 +270,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
     else {
         objectInstance = instance;
     }
-    var objectKeys = Array.from(objectInstance.attributeMap.keys());
+    var objectKeys = Object.keys(objectInstance);
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, objectInstance) || []).filter(function (item) {
         if (objectInstance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(objectInstance.constructor.prototype, item).set === undefined) {
             // Property does not have setter
@@ -283,13 +294,13 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
             // tslint:disable-next-line:triple-equals
             var jsonKeyName = metadata.name != undefined ? metadata.name : key;
             /**
-             * Check requried property
+             * Check required property
              */
             if (metadata.required && json[jsonKeyName] === undefined) {
-                throw new JsonConversionError("JSON structure does have have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", json);
+                throw new JsonConversionError("JSON structure does have have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]");
             }
             // tslint:disable-next-line:triple-equals
-            if (json[jsonKeyName] != undefined) {
+            if (json && json[jsonKeyName] != undefined) {
                 /**
                  * If metadata has deserializer, use that one instead.
                  */
@@ -301,10 +312,6 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                     /**
                     * If we do not have any type defined, then we can't do much here but to hope for the best.
                     */
-                    var targetType = objectInstance.attributeMap.get(key);
-                    var jsonType = typeof json[jsonKeyName];
-                    if (targetType != jsonType)
-                        throw new JsonConversionError("Attempting to assign a '" + jsonType + "' to a '" + targetType + "'", json);
                     objectInstance[key] = json[jsonKeyName];
                 }
                 else {
@@ -316,7 +323,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                             conversionFunctionsList.push({ functionName: Constants.OBJECT_TYPE, type: metadata.type, instance: objectInstance[key], json: json[jsonKeyName] });
                         }
                         else {
-                            conversionFunctions[typeName](objectInstance, key, typeName, json, jsonKeyName);
+                            conversionFunctions[typeName](objectInstance, key, metadata.type, json, jsonKeyName);
                         }
                     }
                     else {
@@ -326,6 +333,9 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                         });
                     }
                 }
+            }
+            else if (isSimpleType(typeof json)) {
+                throw new JsonConversionError("Attempting to convert a simple type object '" + json + "' into a '" + type.name + "'");
             }
         }
     });
@@ -432,10 +442,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
     });
     objectKeys.forEach(function (key) {
         var keyInstance = instanceStructure.instance[key];
-        if (keyInstance === null) {
-            instanceStructure.values.push("\"" + key + "\":" + keyInstance);
-        }
-        else if (keyInstance !== undefined) {
+        if (keyInstance !== undefined && keyInstance !== null) {
             var metadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
             if (metadata !== undefined && exports.AccessType.READ_ONLY === metadata.access) {
             }
@@ -445,6 +452,9 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
             }
             else {
                 if (keyInstance instanceof Array) {
+                    if (keyInstance.length === 0) {
+                        return;
+                    }
                     var struct = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,

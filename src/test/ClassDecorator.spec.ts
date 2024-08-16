@@ -2,7 +2,7 @@ import { AccessType, Deserializer, JsonProperty, JsonPropertyDecoratorMetadata, 
 import { CacheKey } from '../main/DecoratorMetadata';
 import { deserializers, getOrCreateDeserializer } from '../main/DeserializationHelper';
 import { getOrCreateSerializer, serializers } from '../main/SerializationHelper';
-describe('CacheKey Decororator tests', () => {
+describe('CacheKey Decorator tests', () => {
 
     it('Testing getJsonObjectMapperCacheKey()', () => {
 

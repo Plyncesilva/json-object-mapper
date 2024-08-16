@@ -44,9 +44,11 @@ export function CacheKey(key: string): Function;
 export declare function JsonIgnore(): any;
 
 /**
- * Json convertion error type.
+ * Json conversion error type.
  */
-export declare function JsonConversionError(message: string, json: any): Error;
+export declare class JsonConversionError extends Error {
+    constructor(message: string);
+}
 
 export declare namespace ObjectMapper {
 

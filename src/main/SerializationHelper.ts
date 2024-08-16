@@ -89,9 +89,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
     });
     objectKeys.forEach((key: string) => {
         const keyInstance = instanceStructure.instance[key];
-        if (keyInstance === null) {
-            instanceStructure.values.push(`"${key}":${keyInstance}`);
-        } else if (keyInstance !== undefined) {
+        if (keyInstance !== undefined && keyInstance !== null) {
             const metadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instanceStructure.instance, key);
 
             if (metadata !== undefined && AccessType.READ_ONLY === metadata.access) {
@@ -101,6 +99,9 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                 instanceStructure.values.push(serializeFunctions[Constants.STRING_TYPE](getKeyName(instanceStructure.instance, key), keyInstance, serializer));
             } else {
                 if (keyInstance instanceof Array) {
+                    if (keyInstance.length === 0) {
+                        return;
+                    }
                     const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,

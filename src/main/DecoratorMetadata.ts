@@ -67,14 +67,9 @@ export const JsonIgnore = (): Function => {
 /**
  * Json convertion error type.
  */
-export class JsonConversionError {
-    private json: string;
-    private message: string;
-    private stack: string;
-
-    constructor(message: string, json: string) {
-        this.json = json;
-        this.message = message;
-        this.stack = (new Error()).stack;
+export class JsonConversionError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "JsonConversionError";
     }
 }
