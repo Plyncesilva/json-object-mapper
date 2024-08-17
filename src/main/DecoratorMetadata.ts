@@ -1,4 +1,5 @@
 import { Constants, getJsonIgnoreDecorator, getJsonPropertyDecorator, getPropertyDecorator } from './ReflectHelper';
+import { ErrorCode } from 'vita-link-constants';
 
 /**
  * Decorator names
@@ -64,12 +65,32 @@ export const JsonIgnore = (): Function => {
     return getJsonIgnoreDecorator();
 };
 
+class ErrorClass extends Error {
+    constructor (message: string) {
+      super();
+  
+      if (Error.hasOwnProperty('captureStackTrace'))
+          Error.captureStackTrace(this, this.constructor);
+      else
+         Object.defineProperty(this, 'stack', {
+            value: (new Error()).stack
+        });
+  
+      Object.defineProperty(this, 'message', {
+        value: message
+      });
+    }
+}
+
 /**
  * Json convertion error type.
  */
-export class JsonConversionError extends Error {
-    constructor(message: string) {
+export class JsonConversionError extends ErrorClass {
+    public errorCode: ErrorCode;
+    
+    constructor(message: string, errorCode: ErrorCode = ErrorCode.INVALID_JSON) {
         super(message);
         this.name = "JsonConversionError";
+        this.errorCode = errorCode;
     }
 }

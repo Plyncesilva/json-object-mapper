@@ -6,7 +6,8 @@ export default {
     format: 'cjs',
     sourceMap: true,
     external: [
-        'reflect-metadata'
+        'reflect-metadata',
+        'vita-link-constants'
     ],
     globals: {
         "reflect-metadata": "Reflect"

@@ -1,3 +1,4 @@
+import { ErrorCode } from 'vita-link-constants';
 import { AccessType, Deserializer, JsonConversionError , JsonPropertyDecoratorMetadata} from './DecoratorMetadata';
 import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
@@ -9,12 +10,12 @@ const SimpleTypeCoverter = (value: any, type: any): any => {
     }
     else if (type === Date) {
         if ((typeof value) != 'number'){
-            throw new JsonConversionError(`Invalid Date format: ${value}. Must be the number of ms since 1 January 1970.`)
+            throw new JsonConversionError(`Invalid Date format: ${value}. Must be the number of ms since 1 January 1970.`, ErrorCode.INVALID_DATA);
         }        
         return new Date(value);
     }
     
-    throw new JsonConversionError(`Value ${value} is not compatible with type ${type.name}`);
+    throw new JsonConversionError(`Value ${value} is not compatible with type ${type.name}`, ErrorCode.INVALID_TYPE);
 };
 
 
@@ -38,7 +39,7 @@ export const DeserializeSimpleType = (instance: any, instanceKey: string, type: 
         return []
     }
     else {
-        throw new JsonConversionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`);
+        throw new JsonConversionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`, ErrorCode.INVALID_TYPE);
     }
 };
 
@@ -51,7 +52,7 @@ export const DeserializeDateType = (instance: any, instanceKey: string, type: an
         return [];
     } catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConversionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`);
+        throw new JsonConversionError(`Property '${instanceKey}' of ${instance.constructor['name']} does not match datatype of ${jsonKey}`, ErrorCode.INVALID_TYPE);
     }
 };
 
@@ -60,7 +61,7 @@ function getArrayType(arrayType: string): any {
     if (match && match[1]) {
         return match[1].trim();
     } else {
-        throw new JsonConversionError(`Invalid Array type format: ${arrayType}`);
+        throw new JsonConversionError(`Invalid Array type format: ${arrayType}`, ErrorCode.INVALID_DATA);
     }
 }
 
@@ -136,7 +137,7 @@ export const DeserializeComplexType = (instance: any, instanceKey: string, type:
              * Check required property
              */
             if (metadata.required && json[jsonKeyName] === undefined) {
-                throw new JsonConversionError(`JSON structure does have have required property '${key}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`);
+                throw new JsonConversionError(`JSON structure does have have required property '${key}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, ErrorCode.MISSING_REQUIRED);
             }
             // tslint:disable-next-line:triple-equals
             if (json && json[jsonKeyName] != undefined) {
@@ -170,7 +171,7 @@ export const DeserializeComplexType = (instance: any, instanceKey: string, type:
                 }
             }
             else if (isSimpleType(typeof json)){
-                throw new JsonConversionError(`Attempting to convert a simple type object '${json}' into a '${type.name}'`);
+                throw new JsonConversionError(`Attempting to convert a simple type object '${json}' into a '${type.name}'`, ErrorCode.INVALID_TYPE);
             }
         }
 
