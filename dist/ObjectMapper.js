@@ -15,10 +15,6 @@ function __decorate(decorators, target, key, desc) {
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 }
 
-function __metadata(k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-}
-
 /**
  * Reflect Metadata json properties storage name.
  */
@@ -506,8 +502,7 @@ var DateSerializer = (function () {
         };
     }
     DateSerializer = __decorate([
-        CacheKey('DateSerializer'), 
-        __metadata('design:paramtypes', [])
+        CacheKey('DateSerializer')
     ], DateSerializer);
     return DateSerializer;
 }());
@@ -518,8 +513,7 @@ var StringSerializer = (function () {
         };
     }
     StringSerializer = __decorate([
-        CacheKey('StringSerializer'), 
-        __metadata('design:paramtypes', [])
+        CacheKey('StringSerializer')
     ], StringSerializer);
     return StringSerializer;
 }());
@@ -530,8 +524,7 @@ var NumberSerializer = (function () {
         };
     }
     NumberSerializer = __decorate([
-        CacheKey('NumberSerializer'), 
-        __metadata('design:paramtypes', [])
+        CacheKey('NumberSerializer')
     ], NumberSerializer);
     return NumberSerializer;
 }());
@@ -542,8 +535,7 @@ var BooleanSerializer = (function () {
         };
     }
     BooleanSerializer = __decorate([
-        CacheKey('BooleanSerializer'), 
-        __metadata('design:paramtypes', [])
+        CacheKey('BooleanSerializer')
     ], BooleanSerializer);
     return BooleanSerializer;
 }());
@@ -567,7 +559,7 @@ serializers[Constants.BOOLEAN_TYPE_LOWERCASE] = serializers[Constants.BOOLEAN_TY
 var getOrCreateSerializer = function (type) {
     return getCachedType(type, serializers);
 };
-var serializeFunctions = [];
+var serializeFunctions = {};
 serializeFunctions[Constants.STRING_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.NUMBER_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.BOOLEAN_TYPE] = SerializeSimpleType;
@@ -607,7 +599,7 @@ var uniqueId = function () {
         var conversionFunctionStructure = {
             functionName: Constants.OBJECT_TYPE,
             instance: dtoInstance,
-            json: json,
+            json: json
         };
         runDeserialization([conversionFunctionStructure]);
         return dtoInstance;

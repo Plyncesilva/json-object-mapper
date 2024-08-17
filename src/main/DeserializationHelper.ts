@@ -1,7 +1,7 @@
 import { AccessType, Deserializer, JsonConversionError , JsonPropertyDecoratorMetadata} from './DecoratorMetadata';
 import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
-declare var Reflect;
+declare var Reflect: any;
 
 const SimpleTypeCoverter = (value: any, type: any): any => {
     if (areCompatibleSimpleTypes(type, value)) {
@@ -31,7 +31,7 @@ function areCompatibleSimpleTypes(type: any, element: any): boolean {
 /**
  * Deserializes a standard js object type(string, number and boolean) from json.
  */
-export const DeserializeSimpleType = (instance: Object, instanceKey: string, type: any, json: any, jsonKey: string) => {
+export const DeserializeSimpleType = (instance: any, instanceKey: string, type: any, json: any, jsonKey: string): any[] => {
 
     if (areCompatibleSimpleTypes(type, json[jsonKey])) {
         instance[instanceKey] = json[jsonKey];
@@ -45,7 +45,7 @@ export const DeserializeSimpleType = (instance: Object, instanceKey: string, typ
 /**
  * Deserializes a standard js Date object type from json.
  */
-export const DeserializeDateType = (instance: Object, instanceKey: string, type: any, json: any, jsonKey: string): Array<ConversionFunctionStructure> => {
+export const DeserializeDateType = (instance: any, instanceKey: string, type: any, json: any, jsonKey: string): Array<ConversionFunctionStructure> => {
     try {
         instance[instanceKey] = new Date(json[jsonKey]);
         return [];
@@ -67,11 +67,11 @@ function getArrayType(arrayType: string): any {
 /**
  * Deserializes a JS array type from json.
  */
-export let DeserializeArrayType = (instance: any, instanceKey: string, type: any, json: Object, jsonKey: string): Array<ConversionFunctionStructure> => {
+export let DeserializeArrayType = (instance: any, instanceKey: string, type: any, json: any, jsonKey: string): Array<ConversionFunctionStructure> => {
     const jsonObject = (jsonKey !== undefined) ? (json[jsonKey] || []) : json;
     const jsonArraySize = jsonObject.length;
     const conversionFunctionsList = [];
-    const arrayInstance = [];
+    const arrayInstance: any[] = [];
     instance[instanceKey] = arrayInstance;
     if (jsonArraySize > 0) {
         for (let i = 0; i < jsonArraySize; i++) {
@@ -93,8 +93,8 @@ export let DeserializeArrayType = (instance: any, instanceKey: string, type: any
 /**
  * Deserializes a js object type from json.
  */
-export const DeserializeComplexType = (instance: Object, instanceKey: string, type: any, json: any, jsonKey: string): Array<ConversionFunctionStructure> => {
-    const conversionFunctionsList = [];
+export const DeserializeComplexType = (instance: any, instanceKey: string, type: any, json: any, jsonKey: string): Array<ConversionFunctionStructure> => {
+    const conversionFunctionsList: any[] = [];
 
     let objectInstance;
     /**
@@ -194,7 +194,7 @@ export interface ConversionFunctionStructure {
 /**
  * Object to cache deserializers
  */
-export const deserializers = {};
+export const deserializers: any = {};
 
 /**
  * Checks to see if the deserializer already exists or not.
@@ -208,7 +208,7 @@ export const getOrCreateDeserializer = (type: any): any => {
 /**
  * List of JSON object conversion functions.
  */
-export const conversionFunctions = {};
+export const conversionFunctions: any = {};
 conversionFunctions[Constants.OBJECT_TYPE] = DeserializeComplexType;
 conversionFunctions[Constants.ARRAY_TYPE] = DeserializeArrayType;
 conversionFunctions[Constants.DATE_TYPE] = DeserializeDateType;

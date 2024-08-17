@@ -48,7 +48,7 @@ describe('Testing deserialize function with large datasets', () => {
         const testData: JsonGeneratorData = ObjectMapper.deserialize(JsonGeneratorData, largeDataSet1);
         expect(testData.data.length).toBe(6);
         Object.keys(testData.data).forEach((key: string) => {
-            const jsonGeneratorDataObject = testData.data[key];
+            const jsonGeneratorDataObject = (testData as any).data[key];
             Object.keys(jsonGeneratorDataObject).forEach((key1: string) => {
                 if (isArrayType(jsonGeneratorDataObject, key1)) {
                     expect((jsonGeneratorDataObject[key1] as Array<any>).length > 0).toBe(true);

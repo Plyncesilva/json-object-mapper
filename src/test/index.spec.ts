@@ -500,7 +500,7 @@ describe('Misc tests', () => {
 
         class DaysEnumSerializerDeserializer implements Deserializer, Serializer {
             deserialize = (value: string): Days => {
-                return Days[value];
+                return (Days as any)[value];
             }
             serialize = (value: Days): string => {
                 return `"${Days[value]}"`;

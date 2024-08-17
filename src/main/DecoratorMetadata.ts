@@ -50,7 +50,7 @@ export const JsonProperty = (metadata?: JsonPropertyDecoratorMetadata | string):
  * @returns
  */
 export const CacheKey = (key: string): Function => {
-    return (f: Function) => {
+    return (f: any) => {
         const functionName = 'getJsonObjectMapperCacheKey';
         const functionImpl = new Function(`return '${key}';`);
         f[functionName] = functionImpl;

@@ -10,7 +10,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject5();
 
-        const jsonTest = {};
+        const jsonTest: any = {};
         jsonTest['name'] = 'Shakil';
 
         let moreFunctionsList = DeserializeSimpleType(instance, 'field', String, jsonTest, 'name');
@@ -31,7 +31,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject6();
 
-        const jsonTest = {};
+        const jsonTest: any = {};
         jsonTest['booleanType'] = true;
 
         const moreFunctionsList = DeserializeSimpleType(instance, 'field', Boolean, jsonTest, 'booleanType');
@@ -53,7 +53,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject7();
 
-        const jsonTest = {};
+        const jsonTest: any = {};
         jsonTest['numberType'] = 12345;
 
         const moreFunctionsList = DeserializeSimpleType(instance, 'field', Number, jsonTest, 'numberType');
@@ -75,7 +75,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject8();
 
-        const jsonTest = {};
+        const jsonTest: any = {};
         jsonTest['dateType'] = '05/08/2013';
 
         const moreFunctionsList = DeserializeDateType(instance, 'field', Date, jsonTest, 'dateType');
@@ -97,7 +97,7 @@ describe('Testing Conversion functions', () => {
 
         const instance = new TestObject81();
 
-        const jsonTest = {};
+        const jsonTest: any = {};
         jsonTest['dateType'] = 1333065600000;
 
         const moreFunctionsList = DeserializeDateType(instance, 'field', Date, jsonTest, 'dateType');
@@ -179,7 +179,7 @@ describe('Testing Conversion functions', () => {
             field2: string[];
         }
 
-        const json = { 'objects': [] };
+        const json: any = { 'objects': [] };
         const testInstance1 = new TestObject10();
         const testInstance2 = new TestObject10();
 

@@ -80,7 +80,7 @@ export namespace ObjectMapper {
                 mergeObjectOrArrayValuesAndCopyToParents(instanceStruct, parentStruct);
                 stack.pop();
             } else {
-                const moreStructures: Array<SerializationStructure> = serializeFunctions[instanceStruct.type](parentStruct, instanceStruct, stack.length - 1);
+                const moreStructures: Array<SerializationStructure> = serializeFunctions[(instanceStruct as any).type](parentStruct, instanceStruct, stack.length - 1);
                 if (moreStructures.length > 0) {
                     let index = moreStructures.length;
                     while (--index >= 0) {

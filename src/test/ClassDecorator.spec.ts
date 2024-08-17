@@ -10,8 +10,8 @@ describe('CacheKey Decorator tests', () => {
         class TestClassDecorator {
         }
 
-        expect(TestClassDecorator['getJsonObjectMapperCacheKey']).toBeDefined();
-        expect(TestClassDecorator['getJsonObjectMapperCacheKey']()).toBe('TestCacheKey');
+        expect((TestClassDecorator as any)['getJsonObjectMapperCacheKey']).toBeDefined();
+        expect((TestClassDecorator as any)['getJsonObjectMapperCacheKey']()).toBe('TestCacheKey');
     });
 
     it('Testing Serializer key names are properly used', () => {

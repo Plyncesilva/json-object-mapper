@@ -73,13 +73,13 @@ export const isSimpleType = (typeName: string): boolean => {
  * Returns the the instance type name by looking at the constructor name.
  * Stupid IE does not have name property! Hence the hack.
  */
-export const extractClassname = (instance): string => {
+export const extractClassname = (instance: any): string => {
     var instr = instance.toString();
     var i1 = instr.indexOf('class');
     var i2 = instr.indexOf('{', i1 + 5);
     return instr.substring(i1 + 5, i2).trim();
 }
-export const getTypeNameFromInstance = (instance): string => {
+export const getTypeNameFromInstance = (instance: any): string => {
     return instance.name || extractClassname(instance);
 };
 
@@ -91,7 +91,7 @@ export const isArrayType = (instance: any, key: string): boolean => {
     return Array === getType(instance, key);
 };
 
-export const getTypeName = (instance, key): string => {
+export const getTypeName = (instance: any, key: string): string => {
     const type = getType(instance, key);
     // tslint:disable-next-line:triple-equals
     if (type != undefined) {
@@ -116,7 +116,7 @@ export const Constants = {
     FROM_ARRAY: 'fromArray'
 };
 
-export const getCachedType = (type: any, cache: Object): any => {
+export const getCachedType = (type: any, cache: any): any => {
     // tslint:disable-next-line:triple-equals
     const typeName: string = type.getJsonObjectMapperCacheKey != undefined ? type.getJsonObjectMapperCacheKey() : getTypeNameFromInstance(type);
     if (!cache[typeName]) {

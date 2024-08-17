@@ -38,7 +38,7 @@ describe('Testing serialization of large datasets', () => {
 
     it('Testing with JSON.parse(String) method', () => {
         const serializedWithObjectMapper: String = ObjectMapper.serialize(testInstance);
-        const verifyInstance: Object = JSON.parse(serializedWithObjectMapper.toString());
+        const verifyInstance: any = JSON.parse(serializedWithObjectMapper.toString());
         expect(verifyInstance['uuid']).toBe(testInstance.uuid);
         expect(verifyInstance['random']).toBe(testInstance.random);
         expect(verifyInstance['childNodes'].length).toBe(300);
@@ -55,7 +55,7 @@ describe('Testing serialization of large datasets', () => {
  */
 const createUUID = () => {
     // http://www.ietf.org/rfc/rfc4122.txt
-    const s = [];
+    const s: any[] = [];
     const hexDigits = '0123456789abcdef';
     for (let i = 0; i < 36; i++) {
         s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);

@@ -14,7 +14,7 @@ export interface SerializationStructure {
 }
 
 export const SerializeArrayType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
-    const furtherSerializationStructures: Object = {};
+    const furtherSerializationStructures: any = {};
     const arrayInstance: Array<any> = instanceStructure.instance as Array<any>;
     instanceStructure.visited = true;
     arrayInstance.forEach((value: any) => {
@@ -39,7 +39,7 @@ export const SerializeArrayType = (parentStructure: SerializationStructure, inst
     return createArrayOfSerializationStructures(furtherSerializationStructures);
 };
 
-const createArrayOfSerializationStructures = (serializationStructuresObject: Object) => {
+const createArrayOfSerializationStructures = (serializationStructuresObject: any) => {
     const serializationStructures: Array<SerializationStructure> = [];
     Object.keys(serializationStructuresObject).forEach((key: string) => {
         serializationStructures.push(serializationStructuresObject[key]);
@@ -74,7 +74,7 @@ export const mergeObjectOrArrayValues = (instanceStructure: SerializationStructu
 };
 
 export const SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
-    const furtherSerializationStructures: Object = {};
+    const furtherSerializationStructures: any = {};
     instanceStructure.visited = true;
     let objectKeys: string[] = Object.keys(instanceStructure.instance);
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter((item: string) => {
@@ -179,7 +179,7 @@ class BooleanSerializer implements Serializer {
 /**
  * Object to cache serializers
  */
-export const serializers = {};
+export const serializers: any = {};
 serializers[Constants.STRING_TYPE] = new StringSerializer();
 serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
 serializers[Constants.DATE_TYPE] = new DateSerializer();
@@ -198,7 +198,7 @@ export const getOrCreateSerializer = (type: any): any => {
     return getCachedType(type, serializers);
 };
 
-export const serializeFunctions = [];
+export const serializeFunctions: any = {};
 serializeFunctions[Constants.STRING_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.NUMBER_TYPE] = SerializeSimpleType;
 serializeFunctions[Constants.BOOLEAN_TYPE] = SerializeSimpleType;

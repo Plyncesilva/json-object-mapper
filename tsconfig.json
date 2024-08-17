@@ -2,13 +2,29 @@
     "compilerOptions": {
         "rootDir": ".",
         "outDir": "bin",
-        "moduleResolution": "node",
+        "moduleResolution": "node16",
         "sourceMap": true,
         "experimentalDecorators":true,
         "emitDecoratorMetadata": true,
-        "target": "es5"
+        "target": "es2022",
+        "module": "node16",
+
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "lib": ["es2023"],
+        "strict": true,
+
+        "skipLibCheck": true,
+        "strictNullChecks": false,
     },
 	
+    "extends": "@tsconfig/node22/tsconfig.json",
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Node 22",
+    "_version": "22.6.0",
+    "include": ["./**/*.ts"],
+
 	"exclude": [
 		"node_modules", "bin"
 	]
