@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import { AccessType, Deserializer, JsonIgnore, JsonProperty, JsonPropertyDecoratorMetadata, Serializer } from '../main/DecoratorMetadata';
+import { AccessType, Deserializer, JsonConversionError, JsonIgnore, JsonProperty, JsonPropertyDecoratorMetadata, Serializer } from '../main/DecoratorMetadata';
 import { getOrCreateDeserializer } from '../main/DeserializationHelper';
 import { ObjectMapper } from '../main/index';
 import { DateSerializerDeserializer, getOrCreateSerializer } from '../main/SerializationHelper';
 import { a, b } from './NameSpaces';
+import { ErrorCode } from 'vita-link-constants';
 
 describe('Testing deserialize functions', () => {
 
@@ -678,5 +679,24 @@ describe('Testing JsonIgnore decorator', () => {
         const testInstance: Event = ObjectMapper.deserialize(Event, json);
         expect(testInstance.location).toBe('Canberra');
         expect(testInstance.state).toBe('old');
+    });
+});
+
+describe('Testing required decorator attribute', () => {
+
+    class Test {
+        @JsonProperty({
+            required: true,
+            type: String,
+        })
+        name: String = undefined;
+    };
+
+    const cases = [{}, {name: undefined}, {name: null}];
+
+    test.each(cases)('Should throw an error - %p', (object: any) => {
+        expect(() => {
+            ObjectMapper.deserialize(Test, object);
+        }).toThrow(new JsonConversionError("JSON structure does not have required property 'name' as required by '[obj[name]", ErrorCode.MISSING_REQUIRED));
     });
 });

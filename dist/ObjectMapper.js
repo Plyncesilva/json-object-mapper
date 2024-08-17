@@ -312,7 +312,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
             /**
              * Check required property
              */
-            if (metadata.required && json[jsonKeyName] === undefined) {
+            if (metadata.required && json[jsonKeyName] == undefined) {
                 throw new JsonConversionError("JSON structure does not have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", vitaLinkConstants.ErrorCode.MISSING_REQUIRED);
             }
             // tslint:disable-next-line:triple-equals
