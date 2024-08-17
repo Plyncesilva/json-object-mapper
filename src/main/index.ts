@@ -101,4 +101,4 @@ export namespace ObjectMapper {
     };
 }
 export { JsonProperty, JsonConversionError, AccessType, CacheKey, JsonIgnore } from './DecoratorMetadata';
-export { DateSerializer } from './SerializationHelper';
+export { DateSerializerDeserializer } from './SerializationHelper';

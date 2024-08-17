@@ -9,7 +9,7 @@ const SimpleTypeCoverter = (value: any, type: any): any => {
         return value;
     }
     else if (type === Date) {
-        if ((typeof value) != 'number'){
+        if ((typeof value) !== 'number'){
             throw new JsonConversionError(`Invalid Date format: ${value}. Must be the number of ms since 1 January 1970.`, ErrorCode.INVALID_DATA);
         }        
         return new Date(value);
@@ -137,7 +137,7 @@ export const DeserializeComplexType = (instance: any, instanceKey: string, type:
              * Check required property
              */
             if (metadata.required && json[jsonKeyName] === undefined) {
-                throw new JsonConversionError(`JSON structure does have have required property '${key}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, ErrorCode.MISSING_REQUIRED);
+                throw new JsonConversionError(`JSON structure does not have required property '${key}' as required by '${getTypeNameFromInstance(objectInstance)}[${key}]`, ErrorCode.MISSING_REQUIRED);
             }
             // tslint:disable-next-line:triple-equals
             if (json && json[jsonKeyName] != undefined) {

@@ -1,4 +1,5 @@
-import { AccessType, CacheKey, JsonPropertyDecoratorMetadata, Serializer } from './DecoratorMetadata';
+import { ErrorCode } from 'vita-link-constants';
+import { AccessType, CacheKey, Deserializer, JsonConversionError, JsonPropertyDecoratorMetadata, Serializer } from './DecoratorMetadata';
 import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getKeyName, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 
 declare var Reflect: any;
@@ -148,10 +149,16 @@ const SerializeSimpleType = (key: string, instance: any, serializer: Serializer)
     }
 };
 
-@CacheKey('DateSerializer')
-export class DateSerializer implements Serializer {
+@CacheKey('DateSerializerDeserializer')
+export class DateSerializerDeserializer implements Serializer, Deserializer {
     serialize = (value: Date): number => {
         return value.getTime();
+    }
+    deserialize = (value: any): Date => {
+        if ((typeof value) !== 'number'){
+            throw new JsonConversionError(`Invalid Date format: ${value}. Must be the number of ms since 1 January 1970.`, ErrorCode.INVALID_DATA);
+        }
+        return new Date(value);
     }
 }
 
@@ -182,7 +189,7 @@ class BooleanSerializer implements Serializer {
 export const serializers: any = {};
 serializers[Constants.STRING_TYPE] = new StringSerializer();
 serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
-serializers[Constants.DATE_TYPE] = new DateSerializer();
+serializers[Constants.DATE_TYPE] = new DateSerializerDeserializer();
 serializers[Constants.BOOLEAN_TYPE] = new BooleanSerializer();
 serializers[Constants.STRING_TYPE_LOWERCASE] = serializers[Constants.STRING_TYPE];
 serializers[Constants.NUMBER_TYPE_LOWERCASE] = serializers[Constants.NUMBER_TYPE];

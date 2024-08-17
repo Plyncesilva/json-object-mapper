@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { JsonProperty } from "../main/DecoratorMetadata";
-import { ObjectMapper, DateSerializer } from "../main/index";
+import { ObjectMapper, DateSerializerDeserializer } from "../main/index";
 
 describe("Defects", () => {
   it("Defect 22", () => {
@@ -69,16 +69,16 @@ describe("Defects", () => {
   });
   it("Defect 34", () => {
     class ServerHealthReport {
-      @JsonProperty({ type: Date, serializer: DateSerializer })
+      @JsonProperty({ type: Date, serializer: DateSerializerDeserializer })
       creationDate: Date = new Date(1541585888587);
-      @JsonProperty({ type: Date, serializer: DateSerializer })
+      @JsonProperty({ type: Date, serializer: DateSerializerDeserializer })
       endControlDate: Date = new Date(1541585888587);
     }
 
     class PlatformHealthReport {
-      @JsonProperty({ type: Date, serializer: DateSerializer })
+      @JsonProperty({ type: Date, serializer: DateSerializerDeserializer })
       public creationDate: Date = undefined;
-      @JsonProperty({ type: Date, serializer: DateSerializer })
+      @JsonProperty({ type: Date, serializer: DateSerializerDeserializer })
       public endControlDate: Date = undefined;
       @JsonProperty({ type: ServerHealthReport, name: "servers" })
       public servers: ServerHealthReport[] = undefined;

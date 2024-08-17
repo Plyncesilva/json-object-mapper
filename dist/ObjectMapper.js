@@ -203,7 +203,7 @@ var SimpleTypeCoverter = function (value, type) {
         return value;
     }
     else if (type === Date) {
-        if ((typeof value) != 'number') {
+        if ((typeof value) !== 'number') {
             throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.", vitaLinkConstants.ErrorCode.INVALID_DATA);
         }
         return new Date(value);
@@ -313,7 +313,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
              * Check required property
              */
             if (metadata.required && json[jsonKeyName] === undefined) {
-                throw new JsonConversionError("JSON structure does have have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", vitaLinkConstants.ErrorCode.MISSING_REQUIRED);
+                throw new JsonConversionError("JSON structure does not have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", vitaLinkConstants.ErrorCode.MISSING_REQUIRED);
             }
             // tslint:disable-next-line:triple-equals
             if (json && json[jsonKeyName] != undefined) {
@@ -515,16 +515,22 @@ var SerializeSimpleType = function (key, instance, serializer) {
         return value;
     }
 };
-var DateSerializer = (function () {
-    function DateSerializer() {
+var DateSerializerDeserializer = (function () {
+    function DateSerializerDeserializer() {
         this.serialize = function (value) {
             return value.getTime();
         };
+        this.deserialize = function (value) {
+            if ((typeof value) !== 'number') {
+                throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.", vitaLinkConstants.ErrorCode.INVALID_DATA);
+            }
+            return new Date(value);
+        };
     }
-    DateSerializer = __decorate([
-        CacheKey('DateSerializer')
-    ], DateSerializer);
-    return DateSerializer;
+    DateSerializerDeserializer = __decorate([
+        CacheKey('DateSerializerDeserializer')
+    ], DateSerializerDeserializer);
+    return DateSerializerDeserializer;
 }());
 var StringSerializer = (function () {
     function StringSerializer() {
@@ -565,7 +571,7 @@ var BooleanSerializer = (function () {
 var serializers = {};
 serializers[Constants.STRING_TYPE] = new StringSerializer();
 serializers[Constants.NUMBER_TYPE] = new NumberSerializer();
-serializers[Constants.DATE_TYPE] = new DateSerializer();
+serializers[Constants.DATE_TYPE] = new DateSerializerDeserializer();
 serializers[Constants.BOOLEAN_TYPE] = new BooleanSerializer();
 serializers[Constants.STRING_TYPE_LOWERCASE] = serializers[Constants.STRING_TYPE];
 serializers[Constants.NUMBER_TYPE_LOWERCASE] = serializers[Constants.NUMBER_TYPE];
@@ -686,5 +692,5 @@ exports.JsonProperty = JsonProperty;
 exports.JsonConversionError = JsonConversionError;
 exports.CacheKey = CacheKey;
 exports.JsonIgnore = JsonIgnore;
-exports.DateSerializer = DateSerializer;
+exports.DateSerializerDeserializer = DateSerializerDeserializer;
 //# sourceMappingURL=ObjectMapper.js.map

@@ -75,7 +75,8 @@ export declare namespace ObjectMapper {
  * @class DateSerializer
  * @implements {Serializer}
  */
-export declare class DateSerializer implements Serializer {
+export declare class DateSerializerDeserializer implements Serializer, Deserializer {
     public serialize(value: Date): number;
+    public deserialize(value: any): Date;
 }
 

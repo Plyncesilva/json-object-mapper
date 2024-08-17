@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { AccessType, Deserializer, JsonIgnore, JsonProperty, JsonPropertyDecoratorMetadata, Serializer } from '../main/DecoratorMetadata';
 import { getOrCreateDeserializer } from '../main/DeserializationHelper';
 import { ObjectMapper } from '../main/index';
-import { DateSerializer, getOrCreateSerializer } from '../main/SerializationHelper';
+import { DateSerializerDeserializer, getOrCreateSerializer } from '../main/SerializationHelper';
 import { a, b } from './NameSpaces';
 
 describe('Testing deserialize functions', () => {
@@ -383,7 +383,7 @@ describe('Testing serialize functions', () => {
             lastName = 'Doe';
             @JsonProperty({ type: String, name: 'AKA' })
             knownAs: String[] = ['John', 'Doe', 'JohnDoe', 'JohnPDoe'];
-            @JsonProperty({ type: Date, name: 'dateOfBirth', serializer: DateSerializer })
+            @JsonProperty({ type: Date, name: 'dateOfBirth', serializer: DateSerializerDeserializer })
             dob: Date = new Date(1483142400000); // Sat Dec 31, 2016
         }
 
