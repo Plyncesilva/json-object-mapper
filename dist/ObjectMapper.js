@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var vitaLinkConstants = require('vita-link-constants');
+var vitalinkConstants = require('vitalink-constants');
 
 function __extends(d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -190,7 +190,7 @@ var ErrorClass = (function (_super) {
 var JsonConversionError = (function (_super) {
     __extends(JsonConversionError, _super);
     function JsonConversionError(message, errorCode) {
-        if (errorCode === void 0) { errorCode = vitaLinkConstants.ErrorCode.INVALID_JSON; }
+        if (errorCode === void 0) { errorCode = vitalinkConstants.ErrorCode.INVALID_JSON; }
         _super.call(this, message);
         this.name = "JsonConversionError";
         this.errorCode = errorCode;
@@ -204,11 +204,11 @@ var SimpleTypeCoverter = function (value, type) {
     }
     else if (type === Date) {
         if ((typeof value) !== 'number') {
-            throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.", vitaLinkConstants.ErrorCode.INVALID_DATA);
+            throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.", vitalinkConstants.ErrorCode.INVALID_DATA);
         }
         return new Date(value);
     }
-    throw new JsonConversionError("Value " + value + " is not compatible with type " + type.name, vitaLinkConstants.ErrorCode.INVALID_TYPE);
+    throw new JsonConversionError("Value " + value + " is not compatible with type " + type.name, vitalinkConstants.ErrorCode.INVALID_TYPE);
 };
 function areCompatibleSimpleTypes(type, element) {
     var elementType = typeof element;
@@ -227,7 +227,7 @@ var DeserializeSimpleType = function (instance, instanceKey, type, json, jsonKey
         return [];
     }
     else {
-        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, vitaLinkConstants.ErrorCode.INVALID_TYPE);
+        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, vitalinkConstants.ErrorCode.INVALID_TYPE);
     }
 };
 /**
@@ -240,7 +240,7 @@ var DeserializeDateType = function (instance, instanceKey, type, json, jsonKey) 
     }
     catch (e) {
         // tslint:disable-next-line:no-string-literal
-        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, vitaLinkConstants.ErrorCode.INVALID_TYPE);
+        throw new JsonConversionError("Property '" + instanceKey + "' of " + instance.constructor['name'] + " does not match datatype of " + jsonKey, vitalinkConstants.ErrorCode.INVALID_TYPE);
     }
 };
 /**
@@ -313,7 +313,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
              * Check required property
              */
             if (metadata.required && json[jsonKeyName] == undefined) {
-                throw new JsonConversionError("JSON structure does not have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", vitaLinkConstants.ErrorCode.MISSING_REQUIRED);
+                throw new JsonConversionError("JSON structure does not have required property '" + key + "' as required by '" + getTypeNameFromInstance(objectInstance) + "[" + key + "]", vitalinkConstants.ErrorCode.MISSING_REQUIRED);
             }
             // tslint:disable-next-line:triple-equals
             if (json && json[jsonKeyName] != undefined) {
@@ -351,7 +351,7 @@ var DeserializeComplexType = function (instance, instanceKey, type, json, jsonKe
                 }
             }
             else if (isSimpleType(typeof json)) {
-                throw new JsonConversionError("Attempting to convert a simple type object '" + json + "' into a '" + type.name + "'", vitaLinkConstants.ErrorCode.INVALID_TYPE);
+                throw new JsonConversionError("Attempting to convert a simple type object '" + json + "' into a '" + type.name + "'", vitalinkConstants.ErrorCode.INVALID_TYPE);
             }
         }
     });
@@ -522,7 +522,7 @@ var DateSerializerDeserializer = (function () {
         };
         this.deserialize = function (value) {
             if ((typeof value) !== 'number') {
-                throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.", vitaLinkConstants.ErrorCode.INVALID_DATA);
+                throw new JsonConversionError("Invalid Date format: " + value + ". Must be the number of ms since 1 January 1970.", vitalinkConstants.ErrorCode.INVALID_DATA);
             }
             return new Date(value);
         };

@@ -4,7 +4,7 @@ import { getOrCreateDeserializer } from '../main/DeserializationHelper';
 import { ObjectMapper } from '../main/index';
 import { DateSerializerDeserializer, getOrCreateSerializer } from '../main/SerializationHelper';
 import { a, b } from './NameSpaces';
-import { ErrorCode } from 'vita-link-constants';
+import { ErrorCode } from 'vitalink-constants';
 
 describe('Testing deserialize functions', () => {
 

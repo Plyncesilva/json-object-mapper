@@ -1,5 +1,5 @@
 import { Constants, getJsonIgnoreDecorator, getJsonPropertyDecorator, getPropertyDecorator } from './ReflectHelper';
-import { ErrorCode } from 'vita-link-constants';
+import { ErrorCode } from 'vitalink-constants';
 
 /**
  * Decorator names

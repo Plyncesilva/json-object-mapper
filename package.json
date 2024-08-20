@@ -58,6 +58,6 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "vita-link-constants": "github:Plyncesilva/vita-link-constants"
+    "vitalink-constants": "github:Plyncesilva/vitalink-constants"
   }
 }

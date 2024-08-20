@@ -1,4 +1,4 @@
-import { ErrorCode } from 'vita-link-constants';
+import { ErrorCode } from 'vitalink-constants';
 import { AccessType, Deserializer, JsonConversionError , JsonPropertyDecoratorMetadata} from './DecoratorMetadata';
 import { Constants, getCachedType, getJsonPropertyDecoratorMetadata, getTypeName, getTypeNameFromInstance, isArrayType, isSimpleType, METADATA_JSON_IGNORE_NAME, METADATA_JSON_PROPERTIES_NAME } from './ReflectHelper';
 

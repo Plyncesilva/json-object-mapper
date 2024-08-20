@@ -7,7 +7,7 @@ export default {
     sourceMap: true,
     external: [
         'reflect-metadata',
-        'vita-link-constants'
+        'vitalink-constants'
     ],
     globals: {
         "reflect-metadata": "Reflect"
