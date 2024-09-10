@@ -649,6 +649,8 @@ var uniqueId = function () {
      * Serializes an object instance to JSON string.
      */
     ObjectMapper.serialize = function (obj) {
+        if (obj == undefined || Object.keys(obj).length === 0)
+            return '';
         var stack = [];
         var struct = {
             id: undefined,

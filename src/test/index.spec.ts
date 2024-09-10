@@ -362,6 +362,18 @@ describe('Testing deserialize array function', () => {
 });
 
 describe('Testing serialize functions', () => {
+    
+    it('Testing serialize undefined object', () => {
+        let stringrified = ObjectMapper.serialize(undefined);
+        expect(stringrified).toBe('');
+        
+        stringrified = ObjectMapper.serialize(null);
+        expect(stringrified).toBe('');
+
+        stringrified = ObjectMapper.serialize({});
+        expect(stringrified).toBe('');
+    });
+    
     it('Testing Class type with no annotations and 0 children', () => {
 
         const SimpleClassJson = {
