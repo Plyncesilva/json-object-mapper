@@ -56,6 +56,11 @@ export namespace ObjectMapper {
         }
     };
 
+    // TODO: add tests to new functionalities like this one
+    export const serializeToJSON = (obj: any): any => {
+        return JSON.parse(serialize(obj).toString());
+    }
+
     /**
      * Serializes an object instance to JSON string.
      */

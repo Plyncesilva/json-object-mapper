@@ -651,6 +651,10 @@ var uniqueId = function () {
             conversionFunctionStructure = converstionFunctionsArray.pop();
         }
     };
+    // TODO: add tests to new functionalities like this one
+    ObjectMapper.serializeToJSON = function (obj) {
+        return JSON.parse(ObjectMapper.serialize(obj).toString());
+    };
     /**
      * Serializes an object instance to JSON string.
      */
