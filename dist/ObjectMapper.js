@@ -400,6 +400,7 @@ var SerializeArrayType = function (parentStructure, instanceStructure, instanceI
                 var struct = {
                     id: uniqueId(),
                     type: Constants.OBJECT_TYPE,
+                    instanceType: instanceStructure.instanceType,
                     instance: value,
                     parentIndex: instanceIndex,
                     values: [],
@@ -446,6 +447,11 @@ var mergeObjectOrArrayValues = function (instanceStructure) {
     instanceStructure.values.push(mergedValue);
 };
 var SerializeObjectType = function (parentStructure, instanceStructure, instanceIndex) {
+    if (instanceStructure.instance == undefined || Object.keys(instanceStructure.instance).length === 0)
+        return [];
+    if (instanceStructure.instanceType != undefined) {
+        instanceStructure.instance = Object.assign(new instanceStructure.instanceType, instanceStructure.instance);
+    }
     var furtherSerializationStructures = {};
     instanceStructure.visited = true;
     var objectKeys = Object.keys(instanceStructure.instance);
@@ -480,6 +486,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
                     var struct = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,
+                        instanceType: undefined,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],
@@ -492,6 +499,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
                     var struct = {
                         id: uniqueId(),
                         type: Constants.OBJECT_TYPE,
+                        instanceType: undefined,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],
@@ -652,19 +660,18 @@ var uniqueId = function () {
         }
     };
     // TODO: add tests to new functionalities like this one
-    ObjectMapper.serializeToJSON = function (obj) {
-        return JSON.parse(ObjectMapper.serialize(obj).toString());
+    ObjectMapper.serializeToJSON = function (type, obj) {
+        return JSON.parse(ObjectMapper.serialize(type, obj).toString());
     };
     /**
      * Serializes an object instance to JSON string.
      */
-    ObjectMapper.serialize = function (obj) {
-        if (obj == undefined || Object.keys(obj).length === 0)
-            return '{}';
+    ObjectMapper.serialize = function (type, obj) {
         var stack = [];
         var struct = {
             id: undefined,
             type: Array.isArray(obj) === true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
+            instanceType: type,
             instance: obj,
             parentIndex: undefined,
             values: [],

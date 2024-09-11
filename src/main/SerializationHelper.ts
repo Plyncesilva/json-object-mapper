@@ -7,6 +7,7 @@ declare var Reflect: any;
 export interface SerializationStructure {
     id: string; /** id of the current structure */
     type: string; /** 'object' or 'array' */
+    instanceType: any;
     instance: any; /** Object instance to serialize */
     values: Array<String>; /** Array of current current instance's key value pairs */
     parentIndex: number; /** Parent's index position in the stack */
@@ -24,6 +25,7 @@ export const SerializeArrayType = (parentStructure: SerializationStructure, inst
                 const struct: SerializationStructure = {
                     id: uniqueId(),
                     type: Constants.OBJECT_TYPE,
+                    instanceType: instanceStructure.instanceType,
                     instance: value,
                     parentIndex: instanceIndex,
                     values: [],
@@ -75,6 +77,12 @@ export const mergeObjectOrArrayValues = (instanceStructure: SerializationStructu
 };
 
 export const SerializeObjectType = (parentStructure: SerializationStructure, instanceStructure: SerializationStructure, instanceIndex: number): Array<SerializationStructure> => {
+    if (instanceStructure.instance == undefined || Object.keys(instanceStructure.instance).length === 0) 
+        return [];
+    if (instanceStructure.instanceType != undefined) {
+        instanceStructure.instance = Object.assign(new instanceStructure.instanceType, instanceStructure.instance);
+    }
+    
     const furtherSerializationStructures: any = {};
     instanceStructure.visited = true;
     let objectKeys: string[] = Object.keys(instanceStructure.instance);
@@ -109,6 +117,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                     const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,
+                        instanceType: undefined,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],
@@ -120,6 +129,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                     const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.OBJECT_TYPE,
+                        instanceType: undefined,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],

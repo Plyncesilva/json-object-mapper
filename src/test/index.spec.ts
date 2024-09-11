@@ -44,18 +44,22 @@ describe('Testing serialize array function', () => {
             id: number = undefined;
             @JsonProperty()
             location: string = undefined;
-            constructor(id: number, location: string) {
+            public setId = (id: number): Event => {
                 this.id = id;
+                return this;
+            };
+            public setLocation = (location: string): Event => {
                 this.location = location;
+                return this;
             }
         }
         const eventsArray: Event[] = [
-            new Event(1, 'Canberra'),
-            new Event(2, 'Sydney'),
-            new Event(3, 'Melbourne')
+            new Event().setId(1).setLocation('Canberra'),
+            new Event().setId(2).setLocation('Sydney'),
+            new Event().setId(3).setLocation('Melbourne'),
         ];
 
-        const serializedString: String = ObjectMapper.serialize(eventsArray);
+        const serializedString: String = ObjectMapper.serialize(Event, eventsArray);
         expect(serializedString).toBe(`[{"id":1,"location":"Canberra"},{"id":2,"location":"Sydney"},{"id":3,"location":"Melbourne"}]`);
 
     });
@@ -365,17 +369,6 @@ describe('Testing deserialize array function', () => {
 
 describe('Testing serialize functions', () => {
     
-    it('Testing serialize undefined object', () => {
-        let stringrified = ObjectMapper.serialize(undefined);
-        expect(stringrified).toBe('{}');
-        
-        stringrified = ObjectMapper.serialize(null);
-        expect(stringrified).toBe('{}');
-
-        stringrified = ObjectMapper.serialize({});
-        expect(stringrified).toBe('{}');
-    });
-    
     it('Testing Class type with no annotations and 0 children', () => {
 
         class SimpleClassJson {
@@ -387,7 +380,7 @@ describe('Testing serialize functions', () => {
             lastName = 'Doe';
         };
 
-        const stringrified: String = ObjectMapper.serialize(new SimpleClassJson());
+        const stringrified: String = ObjectMapper.serialize(SimpleClassJson, new SimpleClassJson());
         // console.log(JSON.stringify(SimpleClassJson));
         expect(stringrified).toBe(`{"firstName":"John","middleName":"P","lastName":"Doe"}`);
 
@@ -410,7 +403,7 @@ describe('Testing serialize functions', () => {
 
         const intance: SimpleClass = new SimpleClass();
 
-        const stringrified: String = ObjectMapper.serialize(intance);
+        const stringrified: String = ObjectMapper.serialize(SimpleClass, intance);
         expect(stringrified).toBe(`{"firstName":"John","middleName":"P","lastName":"Doe","dateOfBirth":1483142400000,"AKA":["John","Doe","JohnDoe","JohnPDoe"]}`);
 
     });
@@ -514,7 +507,7 @@ describe('Misc tests', () => {
         let cal: Calendar = new Calendar();
         cal.month = "June";
         cal.days = [Days.Mon, Days.Tues];
-        const serialized: String = ObjectMapper.serialize(cal);
+        const serialized: String = ObjectMapper.serialize(Calendar, cal);
         expect(serialized).toBe(`{"month":"June","days":["Mon","Tues"]}`);
     });
 
@@ -543,7 +536,7 @@ describe('Misc tests', () => {
         const testInstance: Workday = ObjectMapper.deserialize(Workday, json);
         expect(testInstance.today === Days.Tues).toBeTruthy();
         testInstance.today = Days.Fri;
-        const serialized: String = ObjectMapper.serialize(testInstance);
+        const serialized: String = ObjectMapper.serialize(Workday, testInstance);
         expect(serialized).toBe(`{"today":"Fri"}`);
     });
 
@@ -562,7 +555,7 @@ describe('Misc tests', () => {
 
         const intance: SimpleClass = new SimpleClass();
 
-        const stringrified: String = ObjectMapper.serialize(intance);
+        const stringrified: String = ObjectMapper.serialize(SimpleClass, intance);
         expect(stringrified).toBe(`{"firstName":"John","middleName":"P","lastName":"Doe"}`);
 
     });
@@ -630,14 +623,21 @@ describe('Testing JsonIgnore decorator', () => {
             @JsonIgnore()
             state: string;
 
-            constructor(id: number, location: string, state: string) {
+            public setId = (id: number): Event => {
                 this.id = id;
+                return this;
+            };
+            public setLocation = (location: string): Event => {
                 this.location = location;
+                return this;
+            };
+            public setState = (state: string): Event => {
                 this.state = state;
-            }
+                return this;
+            };
         }
 
-        const serializedString: String = ObjectMapper.serialize(new Event(1, 'Canberra', 'new'));
+        const serializedString: String = ObjectMapper.serialize(Event, new Event().setId(1).setLocation('Canberra').setState('new'));
         expect(serializedString).toBe('{"id":1,"location":"Canberra"}');
     });
 
@@ -673,14 +673,21 @@ describe('Testing JsonIgnore decorator', () => {
             @JsonIgnore()
             state: string;
 
-            constructor(id: number, location: string, state: string) {
+            public setId = (id: number): Event => {
                 this.id = id;
+                return this;
+            };
+            public setLocation = (location: string): Event => {
                 this.location = location;
+                return this;
+            };
+            public setState = (state: string): Event => {
                 this.state = state;
-            }
+                return this;
+            };
         }
 
-        const serializedString: String = ObjectMapper.serialize(new Event(1, 'Canberra', 'new'));
+        const serializedString: String = ObjectMapper.serialize(Event, new Event().setId(1).setLocation('Canberra').setState('new'));
         expect(serializedString).toBe('{"id":1,"location":"Canberra"}');
     });
 

@@ -44,12 +44,12 @@ describe('Testing serialization of large datasets', () => {
     });
 
     it('Testing serialize method', () => {
-        const serializedWithObjectMapper: String = ObjectMapper.serialize(testInstance);
+        const serializedWithObjectMapper: String = ObjectMapper.serialize(NodeWith3Children, testInstance);
         expect(serializedWithObjectMapper.length > 0).toBeTruthy();
     });
 
     it('Testing with JSON.parse(String) method', () => {
-        const serializedWithObjectMapper: String = ObjectMapper.serialize(testInstance);
+        const serializedWithObjectMapper: String = ObjectMapper.serialize(NodeWith3Children, testInstance);
         const verifyInstance: any = JSON.parse(serializedWithObjectMapper.toString());
         expect(verifyInstance['uuid']).toBe(testInstance.uuid);
         expect(verifyInstance['random']).toBe(testInstance.random);
@@ -57,7 +57,7 @@ describe('Testing serialization of large datasets', () => {
     });
 
     it(`Testing @JsonProperty('UUID') count`, () => {
-        const serializedWithObjectMapper: String = ObjectMapper.serialize(testInstance);
+        const serializedWithObjectMapper: String = ObjectMapper.serialize(NodeWith3Children, testInstance);
         expect((serializedWithObjectMapper.match(/UUID/g) || []).length).toBe(300);
     });
 });

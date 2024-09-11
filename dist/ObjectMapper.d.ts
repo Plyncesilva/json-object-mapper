@@ -65,12 +65,12 @@ export declare namespace ObjectMapper {
     /**
      * Serializes an object instance to JSON string.
      */
-    export function serialize(obj: any): String;
+    export function serialize<T>(type: { new (): T }, obj: any): String;
 
     /**
      * Serializes an object instance to JSON object.
      */
-    export function serializeToJSON(obj: any): any;
+    export function serializeToJSON<T>(type: { new (): T }, obj: any): any;
     
 }
 

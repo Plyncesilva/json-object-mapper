@@ -56,13 +56,13 @@ describe("Defects", () => {
     instance.resubmissionAfterDaysSelected = null;
     instance.resubmissionAfterMessagesSelected = null;
 
-    let serialized: String = ObjectMapper.serialize(instance);
+    let serialized: String = ObjectMapper.serialize(TestObject, instance);
     expect(serialized).toBe(
       '{"_eventId":2416,"_version":2}'
     );
 
     instance.resubmissionAfterDaysSelected = 3;
-    serialized = ObjectMapper.serialize(instance);
+    serialized = ObjectMapper.serialize(TestObject, instance);
     expect(serialized).toBe(
       '{"_eventId":2416,"_version":2,"_resubmissionAfterDaysSelected":3}'
     );
@@ -91,13 +91,13 @@ describe("Defects", () => {
     }
 
     const instance = new PlatformHealthReport();
-    expect(ObjectMapper.serialize(instance)).toBe(
+    expect(ObjectMapper.serialize(PlatformHealthReport, instance)).toBe(
       '{"creationDate":1541585888587,"endControlDate":1541585888587}'
     );
 
     instance.servers.push(new ServerHealthReport());
     instance.servers.push(new ServerHealthReport());
-    expect(ObjectMapper.serialize(instance)).toBe(
+    expect(ObjectMapper.serialize(PlatformHealthReport, instance)).toBe(
       '{"creationDate":1541585888587,"endControlDate":1541585888587,"servers":[{"creationDate":1541585888587,"endControlDate":1541585888587},{"creationDate":1541585888587,"endControlDate":1541585888587}]}'
     );
   });

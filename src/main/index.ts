@@ -57,19 +57,19 @@ export namespace ObjectMapper {
     };
 
     // TODO: add tests to new functionalities like this one
-    export const serializeToJSON = (obj: any): any => {
-        return JSON.parse(serialize(obj).toString());
+    export const serializeToJSON = <T>(type: {new(): T}, obj: any): any => {
+        return JSON.parse(serialize(type, obj).toString());
     }
 
     /**
      * Serializes an object instance to JSON string.
      */
-    export const serialize = (obj: any): String => {
-        if (obj == undefined || Object.keys(obj).length === 0) return '{}';
+    export const serialize = <T>(type: { new(): T }, obj: any): String => {
         const stack: Array<SerializationStructure> = [];
         const struct: SerializationStructure = {
             id: undefined,
             type: Array.isArray(obj) === true ? Constants.ARRAY_TYPE : Constants.OBJECT_TYPE,
+            instanceType: type,
             instance: obj,
             parentIndex: undefined,
             values: [],
