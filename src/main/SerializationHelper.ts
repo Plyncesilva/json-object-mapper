@@ -117,7 +117,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                     const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,
-                        instanceType: undefined,
+                        instanceType: metadata.type,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],
@@ -129,7 +129,7 @@ export const SerializeObjectType = (parentStructure: SerializationStructure, ins
                     const struct: SerializationStructure = {
                         id: uniqueId(),
                         type: Constants.OBJECT_TYPE,
-                        instanceType: undefined,
+                        instanceType: metadata.type,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],

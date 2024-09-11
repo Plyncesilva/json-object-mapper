@@ -486,7 +486,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
                     var struct = {
                         id: uniqueId(),
                         type: Constants.ARRAY_TYPE,
-                        instanceType: undefined,
+                        instanceType: metadata.type,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],
@@ -499,7 +499,7 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
                     var struct = {
                         id: uniqueId(),
                         type: Constants.OBJECT_TYPE,
-                        instanceType: undefined,
+                        instanceType: metadata.type,
                         instance: keyInstance,
                         parentIndex: instanceIndex,
                         values: [],
