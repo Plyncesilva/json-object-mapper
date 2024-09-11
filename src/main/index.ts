@@ -60,7 +60,7 @@ export namespace ObjectMapper {
      * Serializes an object instance to JSON string.
      */
     export const serialize = (obj: any): String => {
-        if (obj == undefined || Object.keys(obj).length === 0) return '';
+        if (obj == undefined || Object.keys(obj).length === 0) return '{}';
         const stack: Array<SerializationStructure> = [];
         const struct: SerializationStructure = {
             id: undefined,

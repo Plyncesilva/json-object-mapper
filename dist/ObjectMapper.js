@@ -143,6 +143,9 @@ var JsonProperty = function (metadata) {
     if (typeof metadata === 'string') {
         return getJsonPropertyDecorator({ name: metadata, required: false, access: exports.AccessType.BOTH });
     }
+    else if (metadata == undefined) {
+        return getJsonPropertyDecorator({ required: false, access: exports.AccessType.BOTH });
+    }
     else {
         return getJsonPropertyDecorator(metadata);
     }
@@ -446,6 +449,9 @@ var SerializeObjectType = function (parentStructure, instanceStructure, instance
     var furtherSerializationStructures = {};
     instanceStructure.visited = true;
     var objectKeys = Object.keys(instanceStructure.instance);
+    objectKeys = objectKeys.filter(function (item) {
+        return getJsonPropertyDecoratorMetadata(instanceStructure.instance, item) != undefined;
+    });
     objectKeys = objectKeys.concat((Reflect.getMetadata(METADATA_JSON_PROPERTIES_NAME, instanceStructure.instance) || []).filter(function (item) {
         if (instanceStructure.instance.constructor.prototype.hasOwnProperty(item) && Object.getOwnPropertyDescriptor(instanceStructure.instance.constructor.prototype, item).get === undefined) {
             // Property does not have getter
@@ -650,7 +656,7 @@ var uniqueId = function () {
      */
     ObjectMapper.serialize = function (obj) {
         if (obj == undefined || Object.keys(obj).length === 0)
-            return '';
+            return '{}';
         var stack = [];
         var struct = {
             id: undefined,

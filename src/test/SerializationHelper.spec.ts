@@ -44,7 +44,9 @@ describe('Testing SerializationHelper methods', () => {
 
     it('Testing SerializeObjectType - simple class', () => {
         class TestSerializeObjectTypeSimpleClass {
+            @JsonProperty()
             id = '1000';
+            @JsonProperty()
             name = 'Test';
         }
         const structSerializeObjectType: SerializationStructure = {
@@ -64,7 +66,9 @@ describe('Testing SerializationHelper methods', () => {
 
     it('Testing SerializeObjectType - class with simple array', () => {
         class TestSerializeObjectTypeClassWithArray {
+            @JsonProperty()
             id = '1000';
+            @JsonProperty()
             name = 'Test';
             @JsonProperty({ type: String, name: 'idsArray' })
             array: string[] = ['67', '33', '23', '45'];
@@ -89,7 +93,9 @@ describe('Testing SerializationHelper methods', () => {
 
     it('Testing SerializeObjectType - class with another class', () => {
         class TestSerializeObjectTypeClassWithAnotherClass {
+            @JsonProperty()
             id = '1000';
+            @JsonProperty()
             name = 'Test';
             @JsonProperty({ type: SimpleClass })
             simpleClass: SimpleClass = new SimpleClass();

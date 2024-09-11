@@ -40,7 +40,9 @@ describe('Testing deserialize functions', () => {
 describe('Testing serialize array function', () => {
     it('Testing array serialization', () => {
         class Event {
+            @JsonProperty()
             id: number = undefined;
+            @JsonProperty()
             location: string = undefined;
             constructor(id: number, location: string) {
                 this.id = id;
@@ -365,24 +367,27 @@ describe('Testing serialize functions', () => {
     
     it('Testing serialize undefined object', () => {
         let stringrified = ObjectMapper.serialize(undefined);
-        expect(stringrified).toBe('');
+        expect(stringrified).toBe('{}');
         
         stringrified = ObjectMapper.serialize(null);
-        expect(stringrified).toBe('');
+        expect(stringrified).toBe('{}');
 
         stringrified = ObjectMapper.serialize({});
-        expect(stringrified).toBe('');
+        expect(stringrified).toBe('{}');
     });
     
     it('Testing Class type with no annotations and 0 children', () => {
 
-        const SimpleClassJson = {
-            firstName: 'John',
-            middleName: 'P',
-            lastName: 'Doe'
+        class SimpleClassJson {
+            @JsonProperty()
+            firstName = 'John';
+            @JsonProperty()
+            middleName = 'P';
+            @JsonProperty()
+            lastName = 'Doe';
         };
 
-        const stringrified: String = ObjectMapper.serialize(SimpleClassJson);
+        const stringrified: String = ObjectMapper.serialize(new SimpleClassJson());
         // console.log(JSON.stringify(SimpleClassJson));
         expect(stringrified).toBe(`{"firstName":"John","middleName":"P","lastName":"Doe"}`);
 
@@ -391,8 +396,11 @@ describe('Testing serialize functions', () => {
     it('Testing Class type with no annotations and an array', () => {
 
         class SimpleClass {
+            @JsonProperty()
             firstName = 'John';
+            @JsonProperty()
             middleName = 'P';
+            @JsonProperty()
             lastName = 'Doe';
             @JsonProperty({ type: String, name: 'AKA' })
             knownAs: String[] = ['John', 'Doe', 'JohnDoe', 'JohnPDoe'];
@@ -497,6 +505,7 @@ describe('Misc tests', () => {
         }
 
         class Calendar {
+            @JsonProperty()
             month: string = undefined;
             @JsonProperty({type: Days, serializer: DaysEnumArraySerializer})
             days: Days[] = undefined;
@@ -541,8 +550,11 @@ describe('Misc tests', () => {
     it('Testing AccessType.READ_ONLY', () => {
 
         class SimpleClass {
+            @JsonProperty()
             firstName = 'John';
+            @JsonProperty()
             middleName = 'P';
+            @JsonProperty()
             lastName = 'Doe';
             @JsonProperty({ type: String, name: 'AKA', access: AccessType.READ_ONLY })
             knownAs: String[] = ['John', 'Doe', 'JohnDoe', 'JohnPDoe'];

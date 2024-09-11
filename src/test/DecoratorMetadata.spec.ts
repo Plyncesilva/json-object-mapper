@@ -11,7 +11,7 @@ describe('Testing JsonProperty decorator', () => {
 
         const instance = new TestObject1();
         const jsonPropertyDecoratorMetadata: JsonPropertyDecoratorMetadata = getJsonPropertyDecoratorMetadata(instance, 'field');
-        expect(jsonPropertyDecoratorMetadata === undefined).toBe(true);
+        expect(jsonPropertyDecoratorMetadata !== undefined).toBe(true);
     });
     it('Test with name', () => {
         class TestObject2 {
