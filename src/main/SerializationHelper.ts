@@ -164,8 +164,8 @@ const SerializeSimpleType = (key: string, instance: any, serializer: Serializer)
 
 @CacheKey('DateSerializerDeserializer')
 export class DateSerializerDeserializer implements Serializer, Deserializer {
-    serialize = (value: Date): number => {
-        return value.getTime();
+    serialize = (value: any): number => {
+        return value instanceof Date ? value.getTime() : value;
     }
     deserialize = (value: any): Date => {
         if ((typeof value) !== 'number'){

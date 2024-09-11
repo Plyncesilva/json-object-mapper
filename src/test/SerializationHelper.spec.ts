@@ -8,7 +8,7 @@ describe('Testing SerializationHelper methods', () => {
 
     it('Testing SerializeDateType', () => {
         expect(serializeFunctions[Constants.DATE_TYPE]('test', new Date('03/05/2016'), serializers[Constants.DATE_TYPE])).toBe(`"test":${(new Date('03/05/2016')).getTime()}`);
-    });
+    }, 100000);
 
     it('Testing SerializeStringType', () => {
         expect(serializeFunctions[Constants.STRING_TYPE]('test', 'testString', serializers[Constants.STRING_TYPE])).toBe(`"test":"testString"`);

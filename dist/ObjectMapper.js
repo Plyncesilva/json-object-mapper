@@ -532,7 +532,7 @@ var SerializeSimpleType = function (key, instance, serializer) {
 var DateSerializerDeserializer = (function () {
     function DateSerializerDeserializer() {
         this.serialize = function (value) {
-            return value.getTime();
+            return value instanceof Date ? value.getTime() : value;
         };
         this.deserialize = function (value) {
             if ((typeof value) !== 'number') {
